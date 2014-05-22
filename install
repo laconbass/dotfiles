@@ -54,7 +54,8 @@ DOTFILES=$(pwd)/$(dirname $0)
 cd $DOTFILES
 DOTFILES=$(pwd)
 
-doing "updating git modules"\
+doing "updating repository and git modules"\
+ && git pull\
  && git submodule init\
  && git submodule update\
  && success\
@@ -96,7 +97,7 @@ info "***************************************"
 info "***        vim-related utils        ***"
 info "**                                   **"
 
-ensure_present "vim"
+ensure_present "vim-nox"
 
 doing "setting .vimrc file"\
  && cp "$DOTFILES/vim/.vimrc" ~/\
@@ -134,4 +135,20 @@ doing "installing nodejs-complete"\
           ~/.vim/nodejs-complete\
  && success\
  || fail ":S"
+
+ #&& sudo npm install -g jshint\
+ #&& cp "$DOTFILES/vim/5-jshint/plugin/jshint.vim"\
+ #         ~/.vim/bundle/jshint.vim\
+doing "installing jshint.vim"\
+ && warn "this actually does not work"\
+ && success\
+ || fail ":S"
+
+ #&& ln -s "$DOTFILES/vim/5-jslint/ftplugin"\
+ #         ~/.vim/ftplugin\
+doing "installing jslint.vim"\
+ && warn "this actually does not work"\
+ && success\
+ || fail ":S"
+
 

@@ -22,3 +22,9 @@
 [submodule "vim/4-nodejs-complete"]
 	path = vim/4-nodejs-complete
 	url = https://github.com/ahayman/vim-nodejs-complete.git
+[submodule "vim/5-jshint"]
+	path = vim/5-jshint
+	url = https://github.com/walm/jshint.vim.git
+[submodule "vim/6-jslint"]
+	path = vim/6-jslint
+	url = https://github.com/hallettj/jslint.vim.git
