@@ -16,3 +16,6 @@
 [submodule "term/2-gnome-terminal-solarized"]
 	path = term/2-gnome-terminal-solarized
 	url = https://github.com/sigurdga/gnome-terminal-colors-solarized.git
+[submodule "term/3-bash-completion"]
+	path = term/3-bash-completion
+	url = git://git.debian.org/git/bash-completion/bash-completion.git

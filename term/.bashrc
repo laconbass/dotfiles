@@ -49,6 +49,10 @@ if [ -f /etc/bashrc ]; then
       . /etc/bashrc   # --> Read /etc/bashrc, if present.
 fi
 
+# Use bash-completion, if available
+if [ -f /usr/share/bash-completion/bash_completion ]; then
+  source /usr/share/bash-completion/bash_completion
+fi
 
 #--------------------------------------------------------------
 #  Automatic setting of $DISPLAY (if not set already).

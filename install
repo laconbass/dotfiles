@@ -76,12 +76,12 @@ doing "setting soralized palette for ls output"\
  || fail "something went wrong"
 
 doing "installing gnome-terminal-colors-solarized"\
- && echo ""\
  && cd $DOTFILES/term/2-gnome-terminal-solarized\
  && ./set_dark.sh\
  && cd $DOTFILES\
  && success\
  || fail
+
 
 info "***************************************"
 info "***        vim-related utils        ***"
@@ -119,4 +119,4 @@ doing "installing solarized"\
  && success\
  || fail ":S"
 
-doing "fallando adrede" && fail ":S"
+doing "failing intentionally" && fail ":S"
