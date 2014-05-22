@@ -49,10 +49,6 @@ if [ -f /etc/bashrc ]; then
       . /etc/bashrc   # --> Read /etc/bashrc, if present.
 fi
 
-# Use bash-completion, if available
-if [ -f /usr/share/bash-completion/bash_completion ]; then
-  source /usr/share/bash-completion/bash_completion
-fi
 
 #--------------------------------------------------------------
 #  Automatic setting of $DISPLAY (if not set already).
@@ -310,6 +306,14 @@ case ${TERM} in
         PS1=${PS1}"\[${SU}\]\u\[${NC}\]@\[${CNX}\]\h\[${NC}\] "
         # PWD (with 'disk space' info):
         PS1=${PS1}"\[\$(disk_color)\]\W]\[${NC}\] "
+        # Add git info:
+        G=~/.dotfiles/term/git-prompt
+        PS1=${PS1}"\[${Blue}\]\`${G}\`"
+        PS1=${PS1}"\[${NC}\]\`${G} s\`"
+        PS1=${PS1}"\[${Green}\]\`${G} 1\`"
+        PS1=${PS1}"\[${Red}\]\`${G} 2\`"
+        PS1=${PS1}"\[${Yellow}\]\`${G} 3\`"
+        PS1=${PS1}"\[${NC}\]"
         # Prompt (with 'job' info):
         PS1=${PS1}"\[\$(job_color)\]>\[${NC}\] "
         # Set title of current xterm:
