@@ -128,4 +128,10 @@ doing "installing solarized"\
  && success\
  || fail ":S"
 
-doing "failing intentionally" && fail ":S"
+
+doing "installing nodejs-complete"\
+ && ln -s "$DOTFILES/vim/4-nodejs-complete"\
+          ~/.vim/nodejs-complete\
+ && success\
+ || fail ":S"
+

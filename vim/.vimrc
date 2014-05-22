@@ -9,6 +9,9 @@ call pathogen#infect()
 syntax on
 filetype plugin indent on
 
+"required for completion
+filetype plugin on
+
 set t_Co=256
 "could try also
 "set t_Co=16

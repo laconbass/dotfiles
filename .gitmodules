@@ -19,3 +19,6 @@
 [submodule "term/3-bash-completion"]
 	path = term/3-bash-completion
 	url = git://git.debian.org/git/bash-completion/bash-completion.git
+[submodule "vim/4-nodejs-complete"]
+	path = vim/4-nodejs-complete
+	url = https://github.com/ahayman/vim-nodejs-complete.git
