@@ -50,12 +50,15 @@ info "***************************************"
 info "***           preparation           ***"
 info "**                                   **"
 
+DOTFILES=$(pwd)/$(dirname $0)
+cd $DOTFILES
+DOTFILES=$(pwd)
+
 doing "updating git modules"\
+ && git submodule init\
  && git submodule update\
  && success\
  || fail ":S"
-
-DOTFILES=$(pwd)
 
 info "***************************************"
 info "***           xterm utils           ***"
@@ -66,9 +69,15 @@ doing "setting .bashrc file"\
  && success\
  || fail "sorry, aborting"
 
+doing "setting git-prompt file"\
+ && cp "$DOTFILES/term/git-prompt" ~/\
+ && success\
+ || fail
+
 doing "loading .bashrc confs"\
- && source ~/.bashrc\
- || fail "something went wrong!"
+ && `source ~/.bashrc`\
+ && success\
+ || fail
 
 doing "setting soralized palette for ls output"\
  && eval `dircolors "$DOTFILES/term/1-dircolors-solarized/dircolors.ansi-dark"`\

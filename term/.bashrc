@@ -307,12 +307,11 @@ case ${TERM} in
         # PWD (with 'disk space' info):
         PS1=${PS1}"\[\$(disk_color)\]\W]\[${NC}\] "
         # Add git info:
-        G=~/.dotfiles/term/git-prompt
-        PS1=${PS1}"\[${Blue}\]\`${G}\`"
-        PS1=${PS1}"\[${NC}\]\`${G} s\`"
-        PS1=${PS1}"\[${Green}\]\`${G} 1\`"
-        PS1=${PS1}"\[${Red}\]\`${G} 2\`"
-        PS1=${PS1}"\[${Yellow}\]\`${G} 3\`"
+        PS1=${PS1}"\[${Blue}\]\`~/git-prompt\`"
+        PS1=${PS1}"\[${NC}\]\`~/git-prompt s\`"
+        PS1=${PS1}"\[${Green}\]\`~/git-prompt 1\`"
+        PS1=${PS1}"\[${Red}\]\`~/git-prompt 2\`"
+        PS1=${PS1}"\[${Yellow}\]\`~/git-prompt 3\`"
         PS1=${PS1}"\[${NC}\]"
         # Prompt (with 'job' info):
         PS1=${PS1}"\[\$(job_color)\]>\[${NC}\] "
