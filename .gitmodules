@@ -1,0 +1,18 @@
+[submodule "vim/1-pathogen"]
+	path = vim/1-pathogen
+	url = https://github.com/tpope/vim-pathogen.git
+[submodule "vim/2-vim-node"]
+	path = vim/2-vim-node
+	url = https://github.com/moll/vim-node.git
+[submodule "term/1-dircolors-solarized"]
+	path = term/1-dircolors-solarized
+	url = https://github.com/seebi/dircolors-solarized.git
+[submodule "vim/3-solarized"]
+	path = vim/3-solarized
+	url = https://github.com/altercation/vim-colors-solarized.git
+[submodule "term/gnome-term-colors"]
+	path = term/gnome-term-colors
+	url = https://github.com/sigurdga/gnome-terminal-colors-solarized.git
+[submodule "term/2-gnome-terminal-solarized"]
+	path = term/2-gnome-terminal-solarized
+	url = https://github.com/sigurdga/gnome-terminal-colors-solarized.git

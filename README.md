@@ -7,13 +7,5 @@ Big thanks to [@holman](https://github.com/holman/dotfiles) for sharing his know
 ## Installation
 
     git clone https://github.com/laconbass/dotfiles.git ~/.dotfiles
-    cd ~/.dotfiles
-    make install
+    . ~/.dotfiles/install
     
-one-liner
-
-    git clone https://github.com/laconbass/dotfiles.git ~/.dotfiles && cd ~/.dotfiles && make install
-    
-## Updating
-
-    cd ~/.dotfiles && make install
