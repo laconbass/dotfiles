@@ -1,0 +1,54 @@
+#!/usr/bin/env node
+
+var exec = require('child_process').exec;
+
+exec('git rev-parse --is-inside-work-tree', function ( err, stdout ){
+  if( err || stdout.trim() !== 'true' ){
+    console.log('');
+    return process.exit();
+  }
+
+  if( !process.argv[2] ) {
+    return exec('git rev-parse --abbrev-ref HEAD', function( err, branch ){
+      if( err ){
+        throw err;
+      }
+      console.log( branch.trim() );
+      process.exit();
+    });
+  }
+
+  exec('git status --porcelain', function( err, data ){
+    data = data
+      .toString()
+      .split('\n')
+      .map(function( line ){ return line.substr( 0, 2 ); })
+      .filter(function( code ){ return code.length == 2; })
+    ;
+    var c, filter;
+    switch( process.argv[2] ){
+      case 's':
+        console.log( '|' );
+        return process.exit();
+      case '1':
+        c = '#';
+        filter = function( code ){ return code[0] != " " && code[0] != "?"; };
+        break;
+      case '2':
+        c = '!';
+        filter = function( code ){ return code[1] != " " && code[1] != "?"; };
+        break;
+      case '3':
+        c = '?'
+        filter = function( code ){ return code == "??"; };
+        break;
+      default:
+        throw new Error("unrecognized mode: "+process.argv[2]);
+    }
+    console.log( data.some(filter)? c : ' ' )
+    process.exit();
+  });
+});
+
+
+
