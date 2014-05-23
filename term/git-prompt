@@ -83,8 +83,6 @@ var output = {};
 exec('git rev-parse --is-inside-work-tree', function ( err, stdout ){
   output.is = true;
   if( err || stdout.trim() !== 'true' ){
-    err && console.error( err.message );
-    console.log('');
     return process.exit(1);
   }
 });
@@ -102,7 +100,6 @@ var branch = /(\w+)(?:\.{3}(\w+)\/\1 \[(\S+) (\d+)(?:, (\S+) (\d+))?\])?/;
 
 exec('git status -b --porcelain', function( err, stdout ){
   if( err ){
-    console.error( err.message );
     process.exit(1);
   }
   var chars = [ '', '', '' ];
