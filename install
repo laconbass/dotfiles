@@ -67,12 +67,14 @@ info "***           xterm utils           ***"
 info "**                                   **"
 
 doing "setting .bashrc file"\
+ && rm ~/.bashrc\
  && ln -s "$DOTFILES/term/.bashrc"\
           ~/.bashrc\
  && success\
  || fail "sorry, aborting"
 
 doing "setting git-prompt file"\
+ && rm ~/git-prompt\
  && ln -s "$DOTFILES/term/git-prompt"\
           ~/git-prompt\
  && success\
@@ -106,6 +108,7 @@ info "**                                   **"
 ensure_present "vim-nox"
 
 doing "setting .vimrc file"\
+ && rm ~/.vimrc\
  && ln -s "$DOTFILES/vim/.vimrc"\
           ~/.vimrc\
  && success\

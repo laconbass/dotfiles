@@ -104,23 +104,26 @@ exec('git status -b --porcelain', function( err, stdout ){
     .toString()
     .split('\n')
     .some(function( line, i ){
+      if( output.branch && chars[0] && chars[1] && chars[2] ){
+        return true;
+      }
+      if( !line ){
+        return false;
+      }
       if( !i && line[0] == "#" ){
         output.branch = format.branch + line.substr(3) + format.reset;
         return false;
       }
-      if( line[0] == '?' || line[1] == '?' ){
+      if( line[0] == '?' && line[1] == '?' ){
         chars[2] = format.untracked + "?" + format.reset;
+        return false;
       }
-      else {
-        if( !chars[0] && line[0] != ' ' ){
-          chars[0] = format.commit + "#" + format.reset;
-        }
-        if( !chars[1] && line[1] != ' ' ){
-          chars[1] = format.changes + "!" + format.reset;
-        }
+      if( !chars[0] && line[0] != ' ' ){
+        console.log( "commit", line );
+        chars[0] = format.commit + "#" + format.reset;
       }
-      if( chars[0] && chars[1] && chars[2] ){
-        return true;
+      if( !chars[1] && line[1] != ' ' ){
+        chars[1] = format.changes + "!" + format.reset;
       }
     })
   ;
