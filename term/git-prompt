@@ -148,9 +148,6 @@ setImmediate(function finish(){
   if( !output.is || !output.branch || !output.chars ){
     return setImmediate( finish );
   }
-  if( output.chars == '   ' ){
-    output.chars = format.fetch + 'fetch' + format.reset;
-  }
   var remote = '';
   if( output.remote ){
     remote += '|';
@@ -161,6 +158,13 @@ setImmediate(function finish(){
     if( output.behind ){
       remote += ( format.behind + '<' + output.behind + format.reset );
     }
+  }
+  if( output.chars == '   ' ){
+    var action = output.behind? 'pull'
+      : output.ahead? 'push'
+      : 'fetch'
+    ;
+    output.chars = format.action + action + format.reset;
   }
   console.log( '%s%s|%s', output.branch, remote, output.chars );
   process.exit();
