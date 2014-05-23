@@ -68,8 +68,8 @@ var color = {
 
 var format = {
   reset: ctrl.sh + ctrl.esc + color.normal + ctrl.st,
+  fetch: ctrl.sh + ctrl.esc + color.yellow + ctrl.st,
   branch: ctrl.sh + ctrl.esc + color.blue + ctrl.st,
-  status: ctrl.sh + ctrl.esc + color.yellow + ctrl.st,
   commit: ctrl.sh + ctrl.esc + color.green + ctrl.st,
   changes: ctrl.sh + ctrl.esc + color.red + ctrl.st,
   utracked: ctrl.sh + ctrl.esc + color.red + ctrl.st
@@ -134,7 +134,7 @@ setImmediate(function finish(){
     return setImmediate( finish );
   }
   if( output.chars == '   ' ){
-    output.chars = 'need fetch';
+    output.chars = format.fetch + 'fetch' + format.reset;
   }
   console.log( '%s|%s', output.branch, output.chars );
   process.exit();
