@@ -96,7 +96,7 @@ exec('git rev-parse --is-inside-work-tree', function ( err, stdout ){
 });*/
 
 //var branch = /(\w+)(.\.\.\.(\w+)\/\w+ \[\w+ (\d+).*\])?/;
-var branch = /(\w+)(?:\.{3}(\w+)\/\1 \[(\S+) (\d+)(?:, (\S+) (\d+))?\])?/;
+var branch = / (\S+)\.{3}(\S+)\/\1 \[(\S+) (\d+)(?:, (\S+) (\d+))?\]/;
 
 exec('git status -b --porcelain', function( err, stdout ){
   if( err ){
@@ -115,6 +115,10 @@ exec('git status -b --porcelain', function( err, stdout ){
       }
       if( !i && line[0] == "#" ){
         var match = line.match( branch );
+        if( !match ){
+          output.branch = line.substr(3);
+          return false;
+        }
         output.branch = format.branch + match[1] + format.reset;
         output.remote = match[2];
         output.ahead = match[4];
