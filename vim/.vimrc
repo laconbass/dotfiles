@@ -18,3 +18,8 @@ set t_Co=256
 "see http://stackoverflow.com/questions/5560658/ubuntu-vim-and-the-solarized-color-palette
 set background=dark
 colorscheme solarized
+
+"set audoindent options
+set expandtab
+set shiftwidth=2
+set softtabstop=2

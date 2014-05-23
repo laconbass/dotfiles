@@ -313,13 +313,8 @@ case ${TERM} in
         PS1=${PS1}"\[${SU}\]\u\[${NC}\]@\[${CNX}\]\h\[${NC}\] "
         # PWD (with 'disk space' info):
         PS1=${PS1}"\[\$(disk_color)\]\W]\[${NC}\] "
-        # Add git info:
-        PS1=${PS1}"\[${Blue}\]\`~/git-prompt\`"
-        PS1=${PS1}"\[${NC}\]\`~/git-prompt s\`"
-        PS1=${PS1}"\[${Green}\]\`~/git-prompt 1\`"
-        PS1=${PS1}"\[${Red}\]\`~/git-prompt 2\`"
-        PS1=${PS1}"\[${Yellow}\]\`~/git-prompt 3\`"
-        PS1=${PS1}"\[${NC}\]"
+        # Add git-promt:
+        PS1=${PS1}"\`~/git-prompt\`"
         # Prompt (with 'job' info):
         PS1=${PS1}"\[\$(job_color)\]>\[${NC}\] "
         # Set title of current xterm:
