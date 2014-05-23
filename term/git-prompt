@@ -115,7 +115,8 @@ exec('git status -b --porcelain', function( err, stdout ){
       if( !i && line[0] == "#" ){
         var match = line.match( branch );
         output.branch = format.branch + match[1] + format.reset;
-        console.log( match );
+        output.remote = match[3];
+        output.commits = match[4];
         return false;
       }
       if( line[0] == '?' && line[1] == '?' ){
@@ -123,7 +124,6 @@ exec('git status -b --porcelain', function( err, stdout ){
         return false;
       }
       if( !chars[0] && line[0] != ' ' ){
-        console.log( "commit", line );
         chars[0] = format.commit + "#" + format.reset;
       }
       if( !chars[1] && line[1] != ' ' ){
@@ -135,6 +135,8 @@ exec('git status -b --porcelain', function( err, stdout ){
 });
 
 
+var f = require('util').format
+
 // execute commands in parallel for quickness
 setImmediate(function finish(){
   if( !output.is || !output.branch || !output.chars ){
@@ -143,7 +145,8 @@ setImmediate(function finish(){
   if( output.chars == '   ' ){
     output.chars = format.fetch + 'fetch' + format.reset;
   }
-  console.log( '%s|%s', output.branch, output.chars );
+  var remote = output.remote? f('%d-%s', output.commits, output.remote) : '';
+  console.log( '%s%s|%s', output.branch, remote, output.chars );
   process.exit();
 });
 
