@@ -29,7 +29,7 @@ fail () {
 # checks whatever a system util is present
 ensure_present () {
   doing "Ensuring package '$1' is present"\
-  && type $1 >/dev/null 2>&1 && success\
+  && dpkg -s $1 > /dev/null 2>&1 && success\
   || (\
     warn "package '$1' not present."\
     && doing "Installing with apt-get"\
@@ -50,6 +50,7 @@ info "***************************************"
 info "***           preparation           ***"
 info "**                                   **"
 
+CURRENT=$(pwd)
 DOTFILES=$(pwd)/$(dirname $0)
 cd $DOTFILES
 DOTFILES=$(pwd)
@@ -75,10 +76,13 @@ doing "setting git-prompt file"\
  && success\
  || fail
 
-doing "loading .bashrc confs"\
- && `source ~/.bashrc`\
- && success\
- || fail
+ensure_present "bash-completion"
+
+# this seems not necessary as it will not afect the parent shell...
+#doing "loading .bashrc confs"\
+# && source ~/.bashrc\
+# && success\
+# || fail
 
 doing "setting soralized palette for ls output"\
  && eval `dircolors "$DOTFILES/term/1-dircolors-solarized/dircolors.ansi-dark"`\
@@ -152,3 +156,16 @@ doing "installing jslint.vim"\
  || fail ":S"
 
 
+info "***************************************"
+info "***            finish up            ***"
+info "**                                   **"
+
+cd $CURRENT
+
+info "The installation process completed"
+info "You may want to close this shell and open a new one"
+info "Or manually execute:"
+info "    source ~/.bashrc"
+info ""
+info "Press any key..."
+read -n 1
