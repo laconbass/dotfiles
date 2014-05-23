@@ -8,4 +8,5 @@ Big thanks to [@holman](https://github.com/holman/dotfiles) for sharing his know
 
     git clone https://github.com/laconbass/dotfiles.git ~/.dotfiles
     . ~/.dotfiles/install
-    
+
+Working on...    
