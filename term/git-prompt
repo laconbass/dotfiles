@@ -68,7 +68,10 @@ var color = {
 
 var format = {
   reset: ctrl.sh + ctrl.esc + color.normal + ctrl.st,
-  fetch: ctrl.sh + ctrl.esc + color.yellow + ctrl.st,
+  ahead: ctrl.sh + ctrl.esc + color.white + ctrl.st,
+  remote: ctrl.sh + ctrl.esc + color.normal + ctrl.st,
+  behind: ctrl.sh + ctrl.esc + color.red + ctrl.st,
+  action: ctrl.sh + ctrl.esc + color.yellow + ctrl.st,
   branch: ctrl.sh + ctrl.esc + color.blue + ctrl.st,
   commit: ctrl.sh + ctrl.esc + color.green + ctrl.st,
   changes: ctrl.sh + ctrl.esc + color.red + ctrl.st,
@@ -116,8 +119,9 @@ exec('git status -b --porcelain', function( err, stdout ){
       if( !i && line[0] == "#" ){
         var match = line.match( branch );
         output.branch = format.branch + match[1] + format.reset;
-        output.remote = match[3];
-        output.commits = match[4];
+        output.remote = match[2];
+        output.ahead = match[3];
+        output.behind = match[5];
         console.log( match );
         return false;
       }
@@ -147,7 +151,11 @@ setImmediate(function finish(){
   if( output.chars == '   ' ){
     output.chars = format.fetch + 'fetch' + format.reset;
   }
-  var remote = output.remote? f('%d-%s', output.commits, output.remote) : '';
+  var remote = output.remote? f('|%s%s%s',
+    format.ahead + output.ahead + '>' + format.reset,
+    format.remote + output.remote + format.reset,
+    format.behind + '<' + output.behind + format.reset
+  ) : '';
   console.log( '%s%s|%s', output.branch, remote, output.chars );
   process.exit();
 });
