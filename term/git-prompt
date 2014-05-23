@@ -68,14 +68,14 @@ var color = {
 
 var format = {
   reset: ctrl.sh + ctrl.esc + color.normal + ctrl.st,
-  ahead: ctrl.sh + ctrl.esc + color.white + ctrl.st,
-  remote: ctrl.sh + ctrl.esc + color.normal + ctrl.st,
+  ahead: ctrl.sh + ctrl.esc + color.blue + ctrl.st,
+  remote: ctrl.sh + ctrl.esc + color.red + ctrl.st,
   behind: ctrl.sh + ctrl.esc + color.red + ctrl.st,
   action: ctrl.sh + ctrl.esc + color.yellow + ctrl.st,
   branch: ctrl.sh + ctrl.esc + color.blue + ctrl.st,
   commit: ctrl.sh + ctrl.esc + color.green + ctrl.st,
   changes: ctrl.sh + ctrl.esc + color.red + ctrl.st,
-  utracked: ctrl.sh + ctrl.esc + color.red + ctrl.st
+  untracked: ctrl.sh + ctrl.esc + color.red + ctrl.st
 };
 
 var output = {};
