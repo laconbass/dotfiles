@@ -151,11 +151,17 @@ setImmediate(function finish(){
   if( output.chars == '   ' ){
     output.chars = format.fetch + 'fetch' + format.reset;
   }
-  var remote = output.remote? f('|%s%s%s',
-    format.ahead + output.ahead + '>' + format.reset,
-    format.remote + output.remote + format.reset,
-    format.behind + '<' + output.behind + format.reset
-  ) : '';
+  var remote = '';
+  if( output.remote ){
+    remote += '|';
+    if( output.ahead ) {
+      remote += ( format.ahead + output.ahead + '>' + format.reset );
+    }
+    remote += ( format.remote + output.remote + format.reset );
+    if( output.behind ){
+      remote += ( format.behind + '<' + output.behind + format.reset );
+    }
+  }
   console.log( '%s%s|%s', output.branch, remote, output.chars );
   process.exit();
 });
