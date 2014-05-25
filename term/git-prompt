@@ -83,7 +83,6 @@ var output = {};
 exec('git rev-parse --is-inside-work-tree', function ( err, stdout ){
   output.is = true;
   if( err || stdout.trim() !== 'true' ){
-    err instanceof Error && console.error( err );
     return process.exit(1);
   }
 });
