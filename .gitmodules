@@ -28,3 +28,6 @@
 [submodule "vim/6-jslint"]
 	path = vim/6-jslint
 	url = https://github.com/hallettj/jslint.vim.git
+[submodule "vim/7-command-t"]
+	path = vim/7-command-t
+	url = git://git.wincent.com/command-t.git
