@@ -14,15 +14,15 @@ warn () {
   printf "\033[0;33m${1}\033[0m\n"
 }
 doing () {
-  printf "\033[00;34m*\033[0m ${1}...\n"
+  printf "\033[00;34m* ${1}...\033[0m\n"
 }
 success () {
   #printf "\033[1C\033[${COLS}C\t\t\033[0;32mOK${1}\033[0m\n"
-  printf "| - - - - - - - - - - - - - - - - -> \033[0;32mOK\033[0m\n"
+  printf "\033[00;34m| - - - - - - - - - - - - - - - - -> \033[0;32mOK\033[0m\n"
   #printf "\t\t\t\t     \033[0;32mOK\n${1}\033[0m\n"
 }
 fail () {
-  printf "| - - - - - - - - - - - - - - - -> \033[0;31mFAIL\033[0m\n" && exit 1
+  printf "\033[00;34m| - - - - - - - - - - - - - - - -> \033[0;31mFAIL\033[0m\n" && exit 1
   # printf "\t\t\t\t   \033[0;31mFAIL\n${1}\033[0m\n" && exit 1
 }
 
@@ -40,11 +40,9 @@ ensure_present () {
 
 
 info ""
-info "*** *** *** *** *** *** *** *** *** ***"
 info "***************************************"
 info "* @laconbass' dotfiles install script *"
 info "***************************************"
-info "*** *** *** *** *** *** *** *** *** ***"
 info ""
 info "***************************************"
 info "***           preparation           ***"
@@ -102,10 +100,87 @@ doing "installing gnome-terminal-colors-solarized"\
 
 
 info "***************************************"
-info "***        vim-related utils        ***"
+info "***              ruby               ***"
 info "**                                   **"
 
-ensure_present "vim-nox"
+ensure_present "ruby"
+
+doing "Ensuring rvm is installed"\
+ && rvm -v\
+ && success\
+ || (\
+   doing "rvm is not present, installing its dependencies"\
+   && sudo apt-get install build-essential openssl\
+                           libreadline6 libreadline6-dev\
+                           curl git-core zlib1g zlib1g-dev\
+                           libssl-dev libyaml-dev libsqlite3-dev\
+                           sqlite3 libxml2-dev libxslt-dev\
+                           autoconf libc6-dev ncurses-dev\
+                           automake libtool bison subversion\
+   && success\
+   && doing "installing rvm"\
+   && curl -L https://get.rvm.io | bash -s stable --ruby\
+   && success\
+   || fail\
+ )
+
+
+info "***************************************"
+info "***               vim               ***"
+info "**                                   **"
+
+# vim must have ruby support for Command-T plugin
+# big thanks to jwieringa for sharing his knowledge
+# https://gist.github.com/jwieringa/1348303
+# big thanks to justinbar for sharings his knowledge
+# http://www.justinbar.net/post/install-vim-with-ruby-support-and-command-t-plugin-on-ubuntu
+
+doing "ensuring vim has ruby support"\
+ && vim --version | grep -o +ruby\
+ && success\
+ || (\
+  doing "No ruby support, purge vim and reinstall"\
+    && sudo apt-get purge vim\
+    && info "successfully purged"\
+    && doing "compiling vim with ruby support"\
+    && cd "$DOTFILES/vim/vim-repo"\
+    && ./configure --with-features=huge --enable-rubyinterp\
+    && make\
+    && sudo make install\
+    && cd "$DOTFILES"\
+    && success\
+    || fail\
+ )
+
+doing "ensure rvm is loaded as a shell function"\
+  && source ~/.rvm/scripts/rvm\
+  && type rvm | head -1\
+  && success\
+  || fail
+
+doing "identify ruby version of vim"
+VIM_RUBY=$(vim --version | sed -n 's/.*\(ruby-[0-9]\.[0-9]\.[0-9]\).*/\1/p')
+info "Vim's ruby version is $VIM_RUBY"
+
+doing "set ruby version to the corresponding one"\
+ && rvm use $VIM_RUBY\
+ && success\
+ || (\
+   doing "installing $VIM_RUBY"\
+   && rvm install $VIM_RUBY\
+   && rvm use $VIM_RUBY\
+   && success\
+   || fail
+ )
+
+# bundle install troubleshooting: https://github.com/bundler/bundler/blob/master/ISSUES.md
+doing "compiling command-t"\
+ && cd "$DOTFILES/vim/7-command-t/ruby/command-t"\
+ && ruby extconf.rb\
+ && make\
+ && cd $DOTFILES\
+ && success\
+ || fail
 
 doing "setting .vimrc file"\
  && rm ~/.vimrc\
@@ -124,6 +199,12 @@ doing "installing pathogen"\
  && ln -s "$DOTFILES/vim/1-pathogen/autoload/pathogen.vim"\
           ~/.vim/autoload/pathogen.vim\
  && mkdir -p ~/.vim/bundle\
+ && success\
+ || fail ":S"
+
+doing "installing command-t"\
+ && ln -s "$DOTFILES/vim/7-command-t"\
+          ~/.vim/bundle/command-t\
  && success\
  || fail ":S"
 
@@ -160,6 +241,7 @@ doing "installing jslint.vim"\
  && warn "this actually does not work"\
  && success\
  || fail ":S"
+
 
 
 info "***************************************"
