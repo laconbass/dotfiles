@@ -34,26 +34,19 @@
 #
 # =============================================================== #
 
-# --> Comments added by HOWTO author.
-
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-
-#-------------------------------------------------------------
-# Source global definitions (if any)
-#-------------------------------------------------------------
-
-
-if [ -f /etc/bashrc ]; then
-      . /etc/bashrc   # --> Read /etc/bashrc, if present.
-fi
-
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
+#
+# Source definitions
+#
+# Read /etc/bashrc, if present.
+[ -f /etc/bashrc ] && source /etc/bashrc 
+# read rvm definitions, if present
+[ -s ~/.rvm/scripts/rvm ] && source ~/.rvm/scripts/rvm
+# enable programmable completion features
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    . /etc/bash_completion
+    source /etc/bash_completion
 fi
 
 
@@ -926,3 +919,5 @@ _killall()
 }
 
 complete -F _killall killall killps
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
