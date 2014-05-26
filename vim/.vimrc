@@ -1,5 +1,3 @@
-" interesting example at
-" http://dotshare.it/dots/187/0/raw/
 
 set number
 
@@ -23,9 +21,7 @@ set background=dark
 colorscheme solarized
 
 " vertical line at 80th column
-set colorcolumn=80
-" textwidth limits
-autocmd BufRead *.md set tw=80
+set colorcolumn=77
 
 "set audoindent options
 set expandtab
@@ -43,8 +39,10 @@ set confirm
 " when ~/.vimrc is changed, autoload
 autocmd! BufWritePost .vimrc source %
 
+" syntax mapping for file extensions
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+
 "leader key and leader maps
 :let mapleader="º"
 :map <Leader>º :CommandT<cr>
 set pastetoggle=<Leader>p
-set backspace=indent,eol,start
