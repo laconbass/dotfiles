@@ -31,3 +31,6 @@
 [submodule "vim/7-command-t"]
 	path = vim/7-command-t
 	url = git://git.wincent.com/command-t.git
+[submodule "vim/8-instant-markdown"]
+	path = vim/8-instant-markdown
+	url = https://github.com/suan/vim-instant-markdown

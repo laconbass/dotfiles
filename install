@@ -104,25 +104,26 @@ info "***              ruby               ***"
 info "**                                   **"
 
 ensure_present "ruby"
+ensure_present "ruby-dev"
 
-doing "Ensuring rvm is installed"\
- && rvm -v\
- && success\
- || (\
-   doing "rvm is not present, installing its dependencies"\
-   && sudo apt-get install build-essential openssl\
-                           libreadline6 libreadline6-dev\
-                           curl git-core zlib1g zlib1g-dev\
-                           libssl-dev libyaml-dev libsqlite3-dev\
-                           sqlite3 libxml2-dev libxslt-dev\
-                           autoconf libc6-dev ncurses-dev\
-                           automake libtool bison subversion\
-   && success\
-   && doing "installing rvm"\
-   && curl -L https://get.rvm.io | bash -s stable --ruby\
-   && success\
-   || fail\
- )
+#doing "Ensuring rvm is installed"\
+# && rvm -v\
+# && success\
+# || (\
+#   doing "rvm is not present, installing its dependencies"\
+#   && sudo apt-get install build-essential openssl\
+#                           libreadline6 libreadline6-dev\
+#                           curl git-core zlib1g zlib1g-dev\
+#                           libssl-dev libyaml-dev libsqlite3-dev\
+#                           sqlite3 libxml2-dev libxslt-dev\
+#                           autoconf libc6-dev ncurses-dev\
+#                           automake libtool bison subversion\
+#   && success\
+#   && doing "installing rvm"\
+#   && curl -L https://get.rvm.io | bash -s stable --ruby\
+#   && success\
+#   || fail\
+# )
 
 
 info "***************************************"
@@ -152,26 +153,26 @@ doing "ensuring vim has ruby support"\
     || fail\
  )
 
-doing "ensure rvm is loaded as a shell function"\
-  && source ~/.rvm/scripts/rvm\
-  && type rvm | head -1\
-  && success\
-  || fail
+#doing "ensure rvm is loaded as a shell function"\
+#  && source ~/.rvm/scripts/rvm\
+#  && type rvm | head -1\
+#  && success\
+#  || fail
 
 doing "identify ruby version of vim"
 VIM_RUBY=$(vim --version | sed -n 's/.*\(ruby-[0-9]\.[0-9]\.[0-9]\).*/\1/p')
 info "Vim's ruby version is $VIM_RUBY"
 
-doing "set ruby version to the corresponding one"\
- && rvm use $VIM_RUBY\
- && success\
- || (\
-   doing "installing $VIM_RUBY"\
-   && rvm install $VIM_RUBY\
-   && rvm use $VIM_RUBY\
-   && success\
-   || fail
- )
+#doing "set ruby version to the corresponding one"\
+# && rvm use $VIM_RUBY\
+# && success\
+# || (\
+#   doing "installing $VIM_RUBY"\
+#   && rvm install $VIM_RUBY\
+#   && rvm use $VIM_RUBY\
+#   && success\
+#   || fail
+# )
 
 # bundle install troubleshooting: https://github.com/bundler/bundler/blob/master/ISSUES.md
 doing "compiling command-t"\
@@ -207,6 +208,20 @@ doing "installing command-t"\
           ~/.vim/bundle/command-t\
  && success\
  || fail ":S"
+
+
+doing "installing vim-instant-markdown"\
+  && sudo gem install pygments.rb\
+  && warn "asumming ruby --version >= 1.9.2"\
+  && warn "if something fails, you will need to"\
+  && warn "   [sudo] gem install redcarpet"\
+  && sudo gem install redcarpet -v 2.3.0\
+  && sudo npm install -g instant-markdown-d\
+  && ensure-present "xdg-utils"\
+  && ln -s "$DOTFILES/vim/8-instant-markdown"\
+           ~/.vim/bundle/instant-markdown\
+  && success\
+  || fail ":S"
 
 doing "installing Node.vim"\
  && ln -s "$DOTFILES/vim/2-vim-node"\
