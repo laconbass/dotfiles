@@ -174,7 +174,6 @@ info "Vim's ruby version is $VIM_RUBY"
 #   || fail
 # )
 
-# bundle install troubleshooting: https://github.com/bundler/bundler/blob/master/ISSUES.md
 doing "compiling command-t"\
  && cd "$DOTFILES/vim/7-command-t/ruby/command-t"\
  && ruby extconf.rb\
@@ -270,5 +269,3 @@ info "You may want to close this shell and open a new one"
 info "Or manually execute:"
 info "    source ~/.bashrc"
 info ""
-info "Press any key..."
-read -n 1
