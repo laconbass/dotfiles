@@ -30,7 +30,7 @@
  */
 
 
-var exec = require('child_process').exec;
+var cp = require('child_process');
 
 /*!
  * See [this post] and [this reference] for understanding on how control
@@ -78,35 +78,14 @@ var format = {
   untracked: ctrl.sh + ctrl.esc + color.red + ctrl.st
 };
 
-var output = {};
+var output = {}
+  , report = cp.spawn( 'git', ['status', '-b', '--porcelain'] )
+  , branch = / (\S+)\.{3}(\S+)\/\1 \[(\S+) (\d+)(?:, (\S+) (\d+))?\]/
+  , chars = [ '', '', '' ]
+;
 
-exec('git rev-parse --is-inside-work-tree', function ( err, stdout ){
-  output.is = true;
-  if( err || stdout.trim() !== 'true' ){
-    return process.exit(1);
-  }
-});
-
-/*exec('git rev-parse --abbrev-ref HEAD', function( err, branch ){
-  if( err ){
-    console.error( err.message );
-    process.exit(1);
-  }
-  output.branch = format.branch + branch.trim() + format.reset;
-});*/
-
-//var branch = /(\w+)(.\.\.\.(\w+)\/\w+ \[\w+ (\d+).*\])?/;
-var branch = / (\S+)\.{3}(\S+)\/\1 \[(\S+) (\d+)(?:, (\S+) (\d+))?\]/;
-
-exec('git status -b --porcelain', {
-  maxBuffer: 500*1024
-}, function( err, stdout ){
-  if( err ){
-    throw err;
-    process.exit(1);
-  }
-  var chars = [ '', '', '' ];
-  stdout
+report.stdout.on('data', function( data ){
+  data
     .toString()
     .split('\n')
     .some(function( line, i ){
@@ -146,15 +125,17 @@ exec('git status -b --porcelain', {
     })
   ;
   output.chars = chars.map(function(v){ return v || ' '; }).join('');
+  if( output.branch && chars[0] && chars[1] && chars[2] ){
+    report.kill();
+  }
 });
-
 
 var f = require('util').format
 
 // execute commands in parallel for quickness
-setImmediate(function finish(){
-  if( !output.is || !output.branch || !output.chars ){
-    return setImmediate( finish );
+report.on('close', function finish( code, signal ){
+  if( code !== null && code != 0 ){
+    return process.exit(1)
   }
   var remote = '';
   if( output.remote ){
