@@ -13,6 +13,9 @@ filetype plugin indent on
 "required for completion
 filetype plugin on
 
+" do not update instant-markdown on realtime
+let g:instant_markdown_slow = 1
+
 set t_Co=256
 "could try also
 "set t_Co=16
