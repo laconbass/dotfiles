@@ -216,7 +216,7 @@ doing "installing vim-instant-markdown"\
   && warn "   [sudo] gem install redcarpet"\
   && sudo gem install redcarpet -v 2.3.0\
   && sudo npm install -g instant-markdown-d\
-  && ensure-present "xdg-utils"\
+  && ensure_present "xdg-utils"\
   && ln -s "$DOTFILES/vim/8-instant-markdown"\
            ~/.vim/bundle/instant-markdown\
   && success\

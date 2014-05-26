@@ -36,6 +36,10 @@ set autoindent
 " http://vimdoc.sourceforge.net/htmldoc/options.html#'confirm'
 set confirm
 
+" fix backspace
+" http://vim.wikia.com/wiki/Backspace_and_delete_problems
+set backspace=indent,eol,start
+
 " when ~/.vimrc is changed, autoload
 autocmd! BufWritePost .vimrc source %
 
