@@ -210,10 +210,12 @@ doing "installing command-t"\
 
 
 doing "installing vim-instant-markdown"\
-  && sudo gem install pygments.rb\
   && warn "asumming ruby --version >= 1.9.2"\
+  && warn "if using ruby 1.8, you may need"\
+  && warn "   [sudo] apt-get install rubygems"\
   && warn "if something fails, you will need to"\
   && warn "   [sudo] gem install redcarpet"\
+  && sudo gem install pygments.rb\
   && sudo gem install redcarpet -v 2.3.0\
   && sudo npm install -g instant-markdown-d\
   && ensure_present "xdg-utils"\
