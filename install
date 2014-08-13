@@ -67,19 +67,27 @@ info "***************************************"
 info "***           preparation           ***"
 info "**                                   **"
 
+# store current directory to restore it at finish?
 CURRENT=$(pwd)
-DOTFILES=$(pwd)/$(dirname $0)
-cd $DOTFILES
+cd ~/
+
+DOTFILES="~/dotfiles"
+doing "checking if dotfiles were already installed"\
+  && cd $DOTFILES\
+  && fail "sorry, please delete $DOTFILES before installing again"\
+  || success && mkdir $DOTFILES && cd $DOTFILES
+  
 DOTFILES=$(pwd)
 
 ensure_present "git"
 
-doing "updating repository and git modules"\
- && git pull\
- && git submodule init\
- && git submodule update\
- && success\
- || fail ":S"
+# is this a "update thing", or a "install thing"?
+#doing "updating repository and git modules"\
+# && git pull\
+# && git submodule init\
+# && git submodule update\
+# && success\
+# || fail ":S"
 
 info "***************************************"
 info "***           xterm utils           ***"
