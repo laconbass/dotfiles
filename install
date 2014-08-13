@@ -42,13 +42,18 @@ confirm () {
 # checks whatever a system util is present
 ensure_present () {
   doing "Ensuring package '$1' is present"\
-  && dpkg -s $1 > /dev/null 2>&1 && success\
+  && dpkg -s $1 > /dev/null 2>&1\
+  && success\
   || (\
-    warn "package '$1' not present."\
+    warn "package '$1' is not present."\
     && confirm "do you want to install it?"
-    && doing "Installing with apt-get"\
-    && sudo apt-get install $1\
-    || fail "Instalation of '$1' failed :S"\
+    && (\
+      doing "Installing with apt-get"\
+      && sudo apt-get install $1\
+      && success\
+      || fail "Instalation of '$1' failed :S"\
+    )\
+    || fail "Can't continue without installing '$1'"\
   )
 }
 
@@ -66,6 +71,8 @@ CURRENT=$(pwd)
 DOTFILES=$(pwd)/$(dirname $0)
 cd $DOTFILES
 DOTFILES=$(pwd)
+
+ensure_present "git"
 
 doing "updating repository and git modules"\
  && git pull\
