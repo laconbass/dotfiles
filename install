@@ -75,7 +75,11 @@ DOTFILES=~/dotfiles
 doing "checking if dotfiles were already installed"\
   && cd $DOTFILES\
   && fail "sorry, please delete $DOTFILES before installing again"\
-  || success && mkdir $DOTFILES && cd $DOTFILES
+  || (\
+    success\
+    && mkdir $DOTFILES\
+    && cd $DOTFILES\
+  )
   
 DOTFILES=$(pwd)
 
