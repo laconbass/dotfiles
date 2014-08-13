@@ -6,6 +6,6 @@ Big thanks to [@holman](https://github.com/holman/dotfiles) for sharing his know
 
 ## Installation
 
-    wget -O - https://raw.githubusercontent.com/laconbass/dotfiles/master/install | bash
+    bash <(wget -O - https://raw.githubusercontent.com/laconbass/dotfiles/master/install)
 
 Working on ...    
