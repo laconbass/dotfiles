@@ -6,7 +6,6 @@ Big thanks to [@holman](https://github.com/holman/dotfiles) for sharing his know
 
 ## Installation
 
-    git clone https://github.com/laconbass/dotfiles.git ~/.dotfiles
-    . ~/.dotfiles/install
+    wget -O - https://raw.githubusercontent.com/laconbass/dotfiles/master/install | bash
 
 Working on ...    
