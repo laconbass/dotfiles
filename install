@@ -71,7 +71,7 @@ info "**                                   **"
 CURRENT=$(pwd)
 cd ~/
 
-DOTFILES="~/dotfiles"
+DOTFILES=~/dotfiles
 doing "checking if dotfiles were already installed"\
   && cd $DOTFILES\
   && fail "sorry, please delete $DOTFILES before installing again"\
