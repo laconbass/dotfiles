@@ -22,8 +22,9 @@ success () {
   #printf "\t\t\t\t     \033[0;32mOK\n${1}\033[0m\n"
 }
 fail () {
-  printf "\033[00;34m| - - - - - - - - - - - - - - - -> \033[0;31mFAIL\033[0m\n" && exit 1
-  # printf "\t\t\t\t   \033[0;31mFAIL\n${1}\033[0m\n" && exit 1
+  [ $# -eq 1 ] && printf "\033[0;31m${1}\033[0m\n"
+  printf "\033[00;34m| - - - - - - - - - - - - - - - -> \033[0;31mFAIL\033[0m\n"
+  exit 1
 }
 
 # asks user for confirmation
