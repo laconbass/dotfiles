@@ -69,19 +69,17 @@ info "**                                   **"
 
 # store current directory to restore it at finish?
 CURRENT=$(pwd)
-cd ~/
 
 DOTFILES=~/dotfiles
 doing "checking if dotfiles were already installed"\
-  && cd $DOTFILES\
+  && cd $DOTFILES 2> /dev/null\
   && fail "sorry, please delete $DOTFILES before installing again"\
   || (\
-    success\
-    && mkdir $DOTFILES\
+    cd ~/\
+    && mkdir $(basename $DOTFILES)\
     && cd $DOTFILES\
+    && DOTFILES=$(pwd) success "created directory: $DOTFILES"\
   )
-  
-DOTFILES=$(pwd)
 
 ensure_present "git"
 
