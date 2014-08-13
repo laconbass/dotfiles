@@ -46,7 +46,7 @@ ensure_present () {
   && success\
   || (\
     warn "package '$1' is not present."\
-    && confirm "do you want to install it?"
+    && confirm "do you want to install it?"\
     && (\
       doing "Installing with apt-get"\
       && sudo apt-get install $1\
