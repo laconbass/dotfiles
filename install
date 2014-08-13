@@ -26,12 +26,26 @@ fail () {
   # printf "\t\t\t\t   \033[0;31mFAIL\n${1}\033[0m\n" && exit 1
 }
 
+# asks user for confirmation
+# taken from http://stackoverflow.com/questions/1885525/how-do-i-prompt-a-user-for-confirmation-in-bash-script
+confirm () {
+  read -p "$(warn "$1") (y|Y): " -n 1
+  echo ""
+  if [[ $REPLY =~ ^[Yy]$ ]]
+  then
+    return 0
+  else
+    return 1
+  fi
+}
+
 # checks whatever a system util is present
 ensure_present () {
   doing "Ensuring package '$1' is present"\
   && dpkg -s $1 > /dev/null 2>&1 && success\
   || (\
     warn "package '$1' not present."\
+    && confirm "do you want to install it?"
     && doing "Installing with apt-get"\
     && sudo apt-get install $1\
     || fail "Instalation of '$1' failed :S"\
