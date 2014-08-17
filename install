@@ -71,11 +71,12 @@ info "**                                   **"
 CURRENT=$(pwd)
 
 DOTFILES=~/dotfiles
-doing "checking if dotfiles were already installed"\
+doing "checking if $DOTFILES exist"\
   && cd $DOTFILES 2> /dev/null\
   && warn "dotfiles is already installed"\
   && confirm "do you want to remove it and proceed?"\
-  && rm -r $DOTFILES\
+  && confirm "this will remove from disk $DOTFILES, are you sure?"\
+  && rm -r --force $DOTFILES\
   || success
 
 info "***************************************"
@@ -119,7 +120,7 @@ info "**                                   **"
 ensure_present "bash-completion"
 
 doing "setting .bashrc file"\
- && ( ls ~/.bashrc > /dev/null 2>&1 rm ~/.bashrc )\
+ && ( ls ~/.bashrc > /dev/null 2>&1 && rm ~/.bashrc )\
  && ln -s "$DOTFILES/term/.bashrc"\
           ~/.bashrc\
  && success\
