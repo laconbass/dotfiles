@@ -84,13 +84,16 @@ info "**                                   **"
 
 ensure_present "git"
 
-confirm "do you want to set git conf?" && doing "setting git conf"\
-  && git config --global user.name "Lorenzo García Rivera"\
-  && git config --global user.email lorenzogrv@gmail.com\
-  && git config --global core.editor vim\
-  && git config --list\
-  && success\
-  || fail "something went wrong :S"
+confirm "do you want to set git conf?"\
+  && (\
+    doing "setting git conf"\
+    && git config --global user.name "Lorenzo García Rivera"\
+    && git config --global user.email lorenzogrv@gmail.com\
+    && git config --global core.editor vim\
+    && git config --list\
+    && success\
+    fail "something went wrong :S"\
+  )\
 
 info "***************************************"
 info "***         getting source          ***"
