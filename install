@@ -116,14 +116,14 @@ info "**                                   **"
 ensure_present "bash-completion"
 
 doing "setting .bashrc file"\
- && rm ~/.bashrc\
+ && ( ls ~/.bashrc > /dev/null 2>&1 rm ~/.bashrc )\
  && ln -s "$DOTFILES/term/.bashrc"\
           ~/.bashrc\
  && success\
  || fail "sorry, aborting"
 
 doing "setting git-prompt file"\
- && rm ~/git-prompt\
+ && ( ls ~/git-prompt > /dev/null 2>&1 && rm ~/git-prompt )\
  && ln -s "$DOTFILES/term/git-prompt"\
           ~/git-prompt\
  && success\
@@ -178,6 +178,8 @@ ensure_present "ruby-dev"
 info "***************************************"
 info "***               vim               ***"
 info "**                                   **"
+
+ensure_present "vim"
 
 # vim must have ruby support for Command-T plugin
 # big thanks to jwieringa for sharing his knowledge
