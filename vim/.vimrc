@@ -53,6 +53,9 @@ autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 "autocmd BufNewFile,BufReadPost *.md set linebreak
 "autocmd BufNewFile,BufReadPost *.md set nolist
 
+" syntax mapping for https://github.com/groenewege/vim-less
+nnoremap <Leader>m :w <BAR> !lessc % > %:t:r.css<CR><space>
+
 "leader key and leader maps
 :let mapleader="º"
 :map <Leader>º :CommandT<cr>

@@ -233,7 +233,8 @@ info "Vim's ruby version is $VIM_RUBY"
 #   || fail
 # )
 
-doing "compiling command-t"\
+confirm "do you want to install command-t?"\
+ && doing "compiling command-t"\
  && cd "$DOTFILES/vim/7-command-t/ruby/command-t"\
  && ruby extconf.rb\
  && make\
@@ -299,6 +300,12 @@ doing "installing solarized"\
 doing "installing nodejs-complete"\
  && ln -s "$DOTFILES/vim/4-nodejs-complete"\
           ~/.vim/nodejs-complete\
+ && success\
+ || fail ":S"
+
+doing "installing vim-less"\
+ && ln -s "$DOTFILES/vim/9-vim-less"\
+          ~/.vim/bundle/vim-less\
  && success\
  || fail ":S"
 

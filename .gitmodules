@@ -34,3 +34,6 @@
 [submodule "vim/8-instant-markdown"]
 	path = vim/8-instant-markdown
 	url = https://github.com/suan/vim-instant-markdown
+[submodule "vim/9-vim-less"]
+	path = vim/9-vim-less
+	url = https://github.com/groenewege/vim-less.git
