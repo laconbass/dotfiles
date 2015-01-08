@@ -23,8 +23,9 @@ set t_Co=256
 set background=dark
 colorscheme solarized
 
-" vertical line at 80th column
+" vertical line at 80th column, don't wrap by default
 set colorcolumn=77
+set nowrap
 
 "set audoindent options
 set expandtab
@@ -48,8 +49,12 @@ autocmd! BufWritePost .vimrc source %
 
 " syntax mapping for file extensions
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+"autocmd BufNewFile,BufReadPost *.md set wrap
+"autocmd BufNewFile,BufReadPost *.md set linebreak
+"autocmd BufNewFile,BufReadPost *.md set nolist
 
 "leader key and leader maps
 :let mapleader="º"
 :map <Leader>º :CommandT<cr>
+:map <Leader>q :qa<cr>
 set pastetoggle=<Leader>p
