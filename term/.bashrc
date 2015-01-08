@@ -378,7 +378,7 @@ alias ll="ls -lv --group-directories-first"
 alias lm='ll |more'        #  Pipe through 'more'
 alias lr='ll -R'           #  Recursive ls.
 alias la='ll -A'           #  Show hidden files.
-alias tree='tree -Csuh'    #  Nice alternative to 'recursive ls' ...
+alias tree='tree -C'    #  Nice alternative to 'recursive ls' ...
 
 
 #-------------------------------------------------------------
@@ -394,13 +394,13 @@ export LESS='-i -N -w  -z-4 -g -e -M -X -F -R -P%t?f%f \
 :stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
 
 # LESS man page colors (makes Man pages more readable).
-export LESS_TERMCAP_mb=$'\E[01;31m'
-export LESS_TERMCAP_md=$'\E[01;31m'
-export LESS_TERMCAP_me=$'\E[0m'
-export LESS_TERMCAP_se=$'\E[0m'
-export LESS_TERMCAP_so=$'\E[01;44;33m'
-export LESS_TERMCAP_ue=$'\E[0m'
-export LESS_TERMCAP_us=$'\E[01;32m'
+#export LESS_TERMCAP_mb=$'\E[01;31m'
+#export LESS_TERMCAP_md=$'\E[01;31m'
+#export LESS_TERMCAP_me=$'\E[0m'
+#export LESS_TERMCAP_se=$'\E[0m'
+#export LESS_TERMCAP_so=$'\E[01;44;33m'
+#export LESS_TERMCAP_ue=$'\E[0m'
+#export LESS_TERMCAP_us=$'\E[01;32m'
 
 
 #-------------------------------------------------------------
@@ -921,3 +921,6 @@ _killall()
 complete -F _killall killall killps
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+export NVM_DIR="/home/lacon/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
