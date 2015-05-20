@@ -79,9 +79,36 @@ var format = {
 };
 
 var output = {}
-  , report = cp.spawn( 'git', ['status', '-b', '--porcelain'] )
   , branch = / (\S+)\.{3}(\S+)\/\1 \[(\S+) (\d+)(?:, (\S+) (\d+))?\]/
   , chars = [ '', '', '' ]
+;
+
+var report = cp.spawn( 'git', ['status', '-b', '--porcelain'] )
+  .once('error', function( error ){
+    if( error.code == 'ENOENT' ){
+      console.error('git-prompt: ENOENT while spawning git. Possible causes:');
+      console.error('git-prompt:   - git is not installed');
+
+      console.error(
+        'git-prompt:   - git is not in $PATH, which is set to:', [''].concat(
+          process.env.PATH
+          .split(':')
+          .filter(function( val, key, arr ){ return arr.indexOf(val) === key; })
+        ).join('\ngit-prompt:     ')
+      );
+
+      console.error('git-prompt:');
+      console.error('git-prompt: For debugging, see also:', [
+        '',
+        'http://stackoverflow.com/questions/27688804/how-do-i-debug-error-spawn-enoent-on-node-js'
+      ].join('\ngit-prompt:   - ') );
+
+      process.exit(1);
+    }
+    console.error('git-prompt: child-process error with code=%s', error.code);
+    console.error( error.stack );
+    process.exit(1);
+  });
 ;
 
 report.stdout.on('data', function( data ){
@@ -132,7 +159,7 @@ report.stdout.on('data', function( data ){
 
 var f = require('util').format
 
-// execute commands in parallel for quickness
+// output as soon as git exits
 report.on('close', function finish( code, signal ){
   if( code !== null && code != 0 ){
     return process.exit(1)

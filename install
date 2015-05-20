@@ -14,15 +14,17 @@ warn () {
   printf "\033[0;33m${1}\033[0m\n"
 }
 doing () {
-  printf "\033[00;34m* ${1}...\033[0m\n"
+  printf "\033[00;34m> ${1}...\033[0m\n"
 }
 success () {
-  [ $# -eq 1 ] && printf "\033[0;32m${1}\033[0m\n"
-  printf "\033[00;34m| - - - - - - - - - - - - - - - - -> \033[0;32mOK\033[0m\n"
+  [ $# -eq 1 ]\
+    && printf "\033[0;32m${1}\033[0m\n"\
+    || printf "\033[00;34m- \033[0;32mOK\033[0m\n"
 }
 fail () {
-  [ $# -eq 1 ] && printf "\033[0;31m${1}\033[0m\n"
-  printf "\033[00;34m| - - - - - - - - - - - - - - - -> \033[0;31mFAIL\033[0m\n"
+  [ $# -eq 1 ]\
+    && printf "\033[0;31m${1}\033[0m\n"\
+    || printf "\033[00;34m- \033[0;31mFAIL\033[0m\n"
   exit 1
 }
 
@@ -44,6 +46,12 @@ confirm () {
 }
 
 # checks whatever a system util is present
+is_present () {
+  dpkg -s $1 > /dev/null 2>&1
+}
+
+# ensure a package is present, try to install it if not
+# fails and exits(1) if it's not successfully installed
 ensure_present () {
   doing "Ensuring package '$1' is present"\
   && dpkg -s $1 > /dev/null 2>&1\
@@ -67,55 +75,57 @@ info "***************************************"
 info "* @laconbass' dotfiles install script *"
 info "***************************************"
 info ""
-info "***************************************"
-info "***           preparation           ***"
-info "**                                   **"
-
-# store current directory to restore it at finish?
-CURRENT=$(pwd)
-
-DOTFILES=~/dotfiles
-doing "checking if $DOTFILES exist"\
-  && cd $DOTFILES 2> /dev/null\
-  && warn "dotfiles is already installed"\
-  && confirm "do you want to remove it and proceed?"\
-  && confirm "this will remove from disk $DOTFILES, are you sure?"\
-  && rm -r --force $DOTFILES\
-  || success
 
 info "***************************************"
 info "***               git               ***"
 info "**                                   **"
 
+GIT_WAS_PRESENT=$(is_present "git" && echo "YES" || echo "NO")
 ensure_present "git"
 
-confirm "do you want to set git conf?"\
+doing "Checking if git should be configured"\
+  && [[ $GIT_WAS_PRESENT = "NO" ]] \
   && (\
-    doing "setting git conf"\
+    doing "setting up git global config"\
     && git config --global user.name "Lorenzo García Rivera"\
     && git config --global user.email lorenzogrv@gmail.com\
     && git config --global core.editor vim\
-    && git config --list\
-    && success\
+    && git config --global --list\
+    && success "git config was set, see above for details"\
     fail "something went wrong :S"\
   )\
+  || warn "git was not installed just now so setup is omitted"
 
 info "***************************************"
 info "***         getting source          ***"
 info "**                                   **"
 
-doing "going to clone dotfiles repository"\
-  && git clone --recurse-submodules -- https://github.com/laconbass/dotfiles.git $DOTFILES\
-  && success\
-  || fail "something went wrong, see logs above"
-  
-# is this a "update thing", or a "install thing"?
-#doing "updating repository and git modules"\
-# && git pull\
-# && git submodule init\
-# && git submodule update\
-# && success\
-# || fail ":S"
+DOTFILES=~/.dotfiles
+
+# Check whatever dotfiles repo should be cloned or updated
+# ensure the directory does not exist before appling update strategy
+doing "selecting a install strategy (update vs fresh-install)"\
+  && info "target directory is $DOTFILES"
+
+if [ ! -d "$DOTFILES" ]
+then
+  success "dotfiles is being fresh-installed"\
+    && doing "going to clone dotfiles repository"\
+    && confirm "press 'Y' to proceed" || fail "stopped by user"\
+    && git clone --recurse-submodules -- https://github.com/laconbass/dotfiles.git $DOTFILES\
+    && success "successfully cloned source repository"\
+    || fail "couldn't clone the respository, see logs above"
+else
+  success "dotfiles is being updated"\
+    && doing "updating repository and git modules"\
+    && confirm "press 'Y' to proceed" || fail "stopped by user"\
+    && git pull\
+    && git submodule init\
+    && git submodule foreach --recursive git reset --hard && git clean -f -d\
+    && git submodule update\
+    && success "succesfully updated source respository"\
+    || fail ":S couldn't update the repository"
+fi
 
 info "***************************************"
 info "***           xterm utils           ***"
@@ -155,13 +165,12 @@ doing "installing gnome-terminal-colors-solarized"\
  && success\
  || fail
 
+# info "***************************************"
+# info "***              ruby               ***"
+# info "**                                   **"
 
-info "***************************************"
-info "***              ruby               ***"
-info "**                                   **"
-
-ensure_present "ruby"
-ensure_present "ruby-dev"
+# ensure_present "ruby"
+# ensure_present "ruby-dev"
 
 #doing "Ensuring rvm is installed"\
 # && rvm -v\
@@ -177,7 +186,7 @@ ensure_present "ruby-dev"
 #                           automake libtool bison subversion\
 #   && success\
 #   && doing "installing rvm"\
-#   && curl -L https://get.rvm.io | bash -s stable --ruby\
+#   && curl -L https://get.rvm.io | bash -s stable --ruby=\
 #   && success\
 #   || fail\
 # )
@@ -187,30 +196,20 @@ info "***************************************"
 info "***               vim               ***"
 info "**                                   **"
 
-ensure_present "vim"
-
 # vim must have ruby support for Command-T plugin
 # big thanks to jwieringa for sharing his knowledge
 # https://gist.github.com/jwieringa/1348303
 # big thanks to justinbar for sharings his knowledge
 # http://www.justinbar.net/post/install-vim-with-ruby-support-and-command-t-plugin-on-ubuntu
+# big thanks to the askubuntu community
+# http://askubuntu.com/questions/281886/what-is-the-difference-between-the-different-vim-packages-available-in-ubuntu
 
-doing "ensuring vim has ruby support"\
- && vim --version | grep -o +ruby\
- && success\
- || (\
-  doing "No ruby support, purge vim and reinstall"\
-    && sudo apt-get purge vim\
-    && info "successfully purged"\
-    && doing "compiling vim with ruby support"\
-    && cd "$DOTFILES/vim/vim-repo"\
-    && ./configure --with-features=huge --enable-rubyinterp\
-    && make\
-    && sudo make install\
-    && cd "$DOTFILES"\
-    && success\
-    || fail\
- )
+ensure_present "vim-nox"
+
+doing "ensuring vim has ruby support (for Command-T plugin)"\
+  && vim --version | grep -o +ruby\
+  && success\
+  || fail "no ruby support"
 
 #doing "ensure rvm is loaded as a shell function"\
 #  && source ~/.rvm/scripts/rvm\
@@ -219,8 +218,8 @@ doing "ensuring vim has ruby support"\
 #  || fail
 
 doing "identify ruby version of vim"
-VIM_RUBY=$(vim --version | sed -n 's/.*\(ruby-[0-9]\.[0-9]\.[0-9]\).*/\1/p')
-info "Vim's ruby version is $VIM_RUBY"
+VIM_RUBY=$(vim --version | sed -n 's/.*ruby-\([0-9]\.[0-9]\.[0-9]\).*/\1/p')
+warn "Vim's ruby version is $VIM_RUBY"
 
 #doing "set ruby version to the corresponding one"\
 # && rvm use $VIM_RUBY\
@@ -233,13 +232,15 @@ info "Vim's ruby version is $VIM_RUBY"
 #   || fail
 # )
 
-confirm "do you want to install command-t?"\
- && doing "compiling command-t"\
+doing "preparing to comiple command-t"\
  && cd "$DOTFILES/vim/7-command-t/ruby/command-t"\
- && ruby extconf.rb\
+ && ensure_present "ruby-dev"\
+ && success "ready to compile command-t with ruby$VIM_RUBY"\
+ && doing "compiling command-t"\
+ && "ruby$VIM_RUBY" extconf.rb\
  && make\
  && cd $DOTFILES\
- && success\
+ && success "command-t compiled! :D"\
  || fail
 
 doing "setting .vimrc file"\
@@ -268,21 +269,21 @@ doing "installing command-t"\
  && success\
  || fail ":S"
 
-
-doing "installing vim-instant-markdown"\
-  && warn "asumming ruby --version >= 1.9.2"\
-  && warn "if using ruby 1.8, you may need"\
-  && warn "   [sudo] apt-get install rubygems"\
-  && warn "if something fails, you will need to"\
-  && warn "   [sudo] gem install redcarpet"\
-  && sudo gem install pygments.rb\
-  && sudo gem install redcarpet -v 2.3.0\
-  && sudo npm install -g instant-markdown-d\
-  && ensure_present "xdg-utils"\
-  && ln -s "$DOTFILES/vim/8-instant-markdown"\
-           ~/.vim/bundle/instant-markdown\
-  && success\
-  || fail ":S"
+# commented out as it installs unnecessary things
+#doing "installing vim-instant-markdown"\
+#  && warn "asumming ruby --version >= 1.9.2"\
+#  && info "if using ruby 1.8, you may need"\
+#  && info "   [sudo] apt-get install rubygems"\
+#  && info "if something fails, you will need to"\
+#  && info "   [sudo] gem install redcarpet"\
+#  && confirm "Press Y to continue (this will install some gems too)"\
+#  && sudo gem install pygments.rb\
+#  && sudo gem install redcarpet -v 2.3.0\
+#  && sudo npm install -g instant-markdown-d\
+#  && ensure_present "xdg-utils"\
+#  && ln -s "$DOTFILES/vim/8-instant-markdown"\
+#           ~/.vim/bundle/instant-markdown\
+#  && success
 
 doing "installing Node.vim"\
  && ln -s "$DOTFILES/vim/2-vim-node"\
@@ -330,7 +331,7 @@ info "***************************************"
 info "***            finish up            ***"
 info "**                                   **"
 
-cd $CURRENT
+cd
 
 info "The installation process completed"
 info "You may want to close this shell and open a new one"

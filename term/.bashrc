@@ -42,8 +42,10 @@
 #
 # Read /etc/bashrc, if present.
 [ -f /etc/bashrc ] && source /etc/bashrc 
+
 # read rvm definitions, if present
-[ -s ~/.rvm/scripts/rvm ] && source ~/.rvm/scripts/rvm
+#[ -s ~/.rvm/scripts/rvm ] && source ~/.rvm/scripts/rvm
+
 # enable programmable completion features
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     source /etc/bash_completion
@@ -920,7 +922,11 @@ _killall()
 
 complete -F _killall killall killps
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+#export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 export NVM_DIR="/home/lacon/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+# Add android sdk directories
+export PATH="$PATH:/home/ALMACEN/SOFTWARE/ANDROID/android-sdk-linux/platform-tools"
+export PATH="$PATH:/home/ALMACEN/SOFTWARE/ANDROID/android-sdk-linux/tools"
