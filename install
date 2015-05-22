@@ -128,44 +128,6 @@ else
     || fail ":S couldn't update the repository"
 fi
 
-info "***************************************"
-info "***           xterm utils           ***"
-info "**                                   **"
-
-ensure_present "bash-completion"
-
-doing "setting .bashrc file"\
- && ( ls ~/.bashrc > /dev/null 2>&1 && rm ~/.bashrc || ok )\
- && ln -s "$DOTFILES/term/.bashrc"\
-          ~/.bashrc\
- && success\
- || fail "sorry, aborting"
-
-doing "setting git-prompt file"\
- && ( ls ~/git-prompt > /dev/null 2>&1 && rm ~/git-prompt || ok )\
- && ln -s "$DOTFILES/term/git-prompt"\
-          ~/git-prompt\
- && success\
- || fail
-
-# this seems not necessary as it will not afect the parent shell...
-#doing "loading .bashrc confs"\
-# && source ~/.bashrc\
-# && success\
-# || fail
-
-doing "setting soralized palette for ls output"\
- && eval `dircolors "$DOTFILES/term/1-dircolors-solarized/dircolors.ansi-dark"`\
- && success\
- || fail "something went wrong"
-
-doing "installing gnome-terminal-colors-solarized"\
- && cd $DOTFILES/term/2-gnome-terminal-solarized\
- && ./set_dark.sh\
- && cd $DOTFILES\
- && success\
- || fail
-
 # info "***************************************"
 # info "***              ruby               ***"
 # info "**                                   **"
@@ -336,6 +298,47 @@ doing "installing jslint.vim"\
  && success\
  || fail ":S"
 
+info "***************************************"
+info "***          custom scripts         ***"
+info "**                                   **"
+
+
+USRBIN=~/bin
+mkdir -p $USRBIN
+
+doing "setting git-prompt script"\
+ && ( ls $USRBIN/git-prompt > /dev/null 2>&1 && rm $USRBIN/git-prompt || ok )\
+ && ln -s "$DOTFILES/term/git-prompt"\
+          $USRBIN/git-prompt\
+ && success\
+ || fail
+
+doing "setting nginx_modsite script"\
+ && ( ls $USRBIN/nginx_modsite > /dev/null 2>&1 && rm $USRBIN/nginx_modsite || ok )\
+ && ln -s "$DOTFILES/term/nginx_modsite"\
+          $USRBIN/nginx_modsite\
+ && success\
+ || fail
+
+info "***************************************"
+info "***          xterm utils            ***"
+info "**                                   **"
+
+ensure_present "bash-completion"
+
+doing "installing gnome-terminal-colors-solarized"\
+ && cd $DOTFILES/term/2-gnome-terminal-solarized\
+ && ./set_dark.sh\
+ && cd $DOTFILES\
+ && success\
+ || fail
+
+doing "setting .bashrc file"\
+ && ( ls ~/.bashrc > /dev/null 2>&1 && rm ~/.bashrc || ok )\
+ && ln -s "$DOTFILES/term/.bashrc"\
+          ~/.bashrc\
+ && success\
+ || fail "sorry, aborting"
 
 
 info "***************************************"

@@ -51,7 +51,6 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     source /etc/bash_completion
 fi
 
-
 #--------------------------------------------------------------
 #  Automatic setting of $DISPLAY (if not set already).
 #  This works for me - your mileage may vary. . . .
@@ -309,7 +308,7 @@ case ${TERM} in
         # PWD (with 'disk space' info):
         PS1=${PS1}"\[\$(disk_color)\]\W]\[${NC}\] "
         # Add git-promt:
-        PS1=${PS1}"\`~/git-prompt\`"
+        PS1=${PS1}"\`git-prompt\`"
         # Prompt (with 'job' info):
         PS1=${PS1}"\[\$(job_color)\]>\[${NC}\] "
         # Set title of current xterm:
@@ -323,7 +322,7 @@ esac
 
 
 
-export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
+export TIMEFORMAT=$'real %3R\tuser %3U\tsys %3S\tpcpu %P\n'
 export HISTIGNORE="&:bg:fg:ll:h"
 export HISTTIMEFORMAT="$(echo -e ${BCyan})[%d/%m %H:%M:%S]$(echo -e ${NC}) "
 export HISTCONTROL=ignoredups
@@ -930,3 +929,9 @@ export NVM_DIR="/home/lacon/.nvm"
 # Add android sdk directories
 export PATH="$PATH:/home/ALMACEN/SOFTWARE/ANDROID/android-sdk-linux/platform-tools"
 export PATH="$PATH:/home/ALMACEN/SOFTWARE/ANDROID/android-sdk-linux/tools"
+
+# Add path for custom scripts
+export PATH=$PATH:~/bin
+
+# ls colors
+eval `dircolors ~/.dotfiles/term/1-dircolors-solarized/dircolors.ansi-dark`
