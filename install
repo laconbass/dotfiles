@@ -80,12 +80,13 @@ info "***************************************"
 info "***               git               ***"
 info "**                                   **"
 
-GIT_WAS_PRESENT=$(is_present "git" && echo "YES" || echo "NO")
 ensure_present "git"
 
 doing "Checking if git should be configured"\
-  && [[ $GIT_WAS_PRESENT = "NO" ]] \
-  && (\
+  && git config --global --list 2>/dev/null\
+  && success "git is already configured for this user"\
+  || (\
+    warn "no global config reported for this user"\
     doing "setting up git global config"\
     && git config --global user.name "Lorenzo García Rivera"\
     && git config --global user.email lorenzogrv@gmail.com\
@@ -93,8 +94,8 @@ doing "Checking if git should be configured"\
     && git config --global --list\
     && success "git config was set, see above for details"\
     fail "something went wrong :S"\
-  )\
-  || warn "git was not installed just now so setup is omitted"
+  )
+
 
 info "***************************************"
 info "***         getting source          ***"
