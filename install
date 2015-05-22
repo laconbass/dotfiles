@@ -243,29 +243,39 @@ doing "preparing to comiple command-t"\
  && success "command-t compiled! :D"\
  || fail
 
+VIMRC=~/.vimrc
+[[ -e $VIMRC ]]\
+  && doing "removing the file $VIMRC"\
+  && rm $VIMRC\
+  && success\
+  || warn "no .vimrc file found, not a problem on fresh installs"
+
 doing "setting .vimrc file"\
- && rm ~/.vimrc\
  && ln -s "$DOTFILES/vim/.vimrc"\
           ~/.vimrc\
  && success\
  || fail "sorry, aborting"
 
-doing "deleting ~/.vim directory"\
- && rm -r ~/.vim\
- && success\
- || fail
+VIMUSR=~/.vim
+[[ -d $VIMUSR ]]\
+  && doing "deleting the directory $VIMUSR"\
+  && rm -r $VIMUSR\
+  && success\
+  || warn "no .vim directory found, not a problem on fresh installs"
 
+VIMBUNDLE="${VIMUSR}/bundle"
+VIMAUTOLOAD="${VIMUSR}/autoload"
 doing "installing pathogen"\
- && mkdir -p ~/.vim/autoload\
+ && mkdir -p $VIMAUTOLOAD\
  && ln -s "$DOTFILES/vim/1-pathogen/autoload/pathogen.vim"\
-          ~/.vim/autoload/pathogen.vim\
- && mkdir -p ~/.vim/bundle\
+          $VIMAUTOLOAD/pathogen.vim\
+ && mkdir -p $VIMBUNDLE\
  && success\
  || fail ":S"
 
 doing "installing command-t"\
  && ln -s "$DOTFILES/vim/7-command-t"\
-          ~/.vim/bundle/command-t\
+          $VIMBUNDLE/command-t\
  && success\
  || fail ":S"
 
@@ -282,44 +292,44 @@ doing "installing command-t"\
 #  && sudo npm install -g instant-markdown-d\
 #  && ensure_present "xdg-utils"\
 #  && ln -s "$DOTFILES/vim/8-instant-markdown"\
-#           ~/.vim/bundle/instant-markdown\
+#           $VIMBUNDLE/instant-markdown\
 #  && success
 
 doing "installing Node.vim"\
  && ln -s "$DOTFILES/vim/2-vim-node"\
-          ~/.vim/bundle/node\
+          $VIMBUNDLE/node\
  && success\
  || fail ":S"
 
 doing "installing solarized"\
  && ln -s "$DOTFILES/vim/3-solarized"\
-          ~/.vim/bundle/solarized\
+          $VIMBUNDLE/solarized\
  && success\
  || fail ":S"
 
 
 doing "installing nodejs-complete"\
  && ln -s "$DOTFILES/vim/4-nodejs-complete"\
-          ~/.vim/nodejs-complete\
+          $VIMUSR/nodejs-complete\
  && success\
  || fail ":S"
 
 doing "installing vim-less"\
  && ln -s "$DOTFILES/vim/9-vim-less"\
-          ~/.vim/bundle/vim-less\
+          $VIMBUNDLE/vim-less\
  && success\
  || fail ":S"
 
  #&& sudo npm install -g jshint\
  #&& cp "$DOTFILES/vim/5-jshint/plugin/jshint.vim"\
- #         ~/.vim/bundle/jshint.vim\
+ #         $VIMBUNDLE/jshint.vim\
 doing "installing jshint.vim"\
  && warn "this actually does not work"\
  && success\
  || fail ":S"
 
  #&& ln -s "$DOTFILES/vim/5-jslint/ftplugin"\
- #         ~/.vim/ftplugin\
+ #         $VIMUSR/ftplugin\
 doing "installing jslint.vim"\
  && warn "this actually does not work"\
  && success\
