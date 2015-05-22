@@ -113,6 +113,14 @@ doing "updating apt sources"\
   || fail "couldn't update apt sources"
 
 info "***************************************"
+info "**              server              ***"
+info "**                                   **"
+
+ensure_present "nginx"
+ensure_present "nodejs"
+
+
+info "***************************************"
 info "***               git               ***"
 info "**                                   **"
 
