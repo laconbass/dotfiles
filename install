@@ -77,6 +77,42 @@ info "***************************************"
 info ""
 
 info "***************************************"
+info "***               ppa               ***"
+info "**                                   **"
+
+PPASRC=/etc/apt/sources.list.d
+set_ppa () {
+  local FILE=$(echo $1 | tr / - | tr . _)
+  doing "Ensuring ppa '$1' is set"\
+  && ls -l $PPASRC | grep $FILE\
+  && success "already set"\
+  || (\
+    warn "it's not set"\
+    && doing "setting up ppa:$1"\
+    && sudo add-apt-repository ppa:$1\
+    && success "successfully added 'ppa:$1'"\
+    || fail "could't add 'ppa:$1', see above for details"\
+  )
+}
+
+# see http://askubuntu.com/questions/4983/what-are-ppas-and-how-do-i-use-them/4987#4987
+info "setting-up some ppa repositories"
+warn "assuming Ubuntu 14.04 environment or later"
+info "assuming ppa are set with add-apt-repository on '$PPASRC'"
+
+ensure_present "software-properties-common"
+
+set_ppa "nginx/stable"
+set_ppa "chris-lea/node.js"
+
+doing "updating apt sources"\
+  && confirm "press Y to proceed"\
+  && sudo apt-get update\
+  && success "updated apt successfully"\
+  && success "finished setting up ppa repositories"\
+  || fail "couldn't update apt sources"
+
+info "***************************************"
 info "***               git               ***"
 info "**                                   **"
 
