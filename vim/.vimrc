@@ -24,7 +24,7 @@ set background=dark
 colorscheme solarized
 
 " vertical line at 80th column, don't wrap by default
-set colorcolumn=77
+set colorcolumn=80 
 set nowrap
 
 "set audoindent options
@@ -56,8 +56,12 @@ autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 " syntax mapping for https://github.com/groenewege/vim-less
 nnoremap <Leader>m :w <BAR> !lessc % > %:t:r.css<CR><space>
 
-"leader key and leader maps
+" Leader key and leader maps
 :let mapleader="º"
 :map <Leader>º :CommandT<cr>
 :map <Leader>q :qa<cr>
 set pastetoggle=<Leader>p
+
+" CommandT specific
+" see https://github.com/wincent/Command-T
+:set wildignore+=*/node_modules/**
