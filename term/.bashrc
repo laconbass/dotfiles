@@ -1,6 +1,68 @@
+##
+# My customized bash profile, by Lorenzo García Rivera
+## 
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+##
+# Read other bash source definitions
+##
+# Read host-specific definitions (/etc/bashrc) if present.
+[ -f /etc/bashrc ] && source /etc/bashrc
+# Read ruby virual machine definitions, if present
+#[ -s ~/.rvm/scripts/rvm ] && source ~/.rvm/scripts/rvm
+# enable programmable completion features
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+    source /etc/bash_completion
+fi
+
+##
+# Default color scheme etc
+##
+# dir colors
+eval `dircolors ~/.dotfiles/term/1-dircolors-solarized/dircolors.ansi-dark`
+
+##
+# Command-aliases
+##
+# tree with colors, 2 levels, ignore node_modules, skip descending when files >
+alias tree="tree -C -L 2 --filelimit 52 -I '*node_modules*'"
+
+##
+# PATH to binaries
+##
+# reseting from system-level PATH
+export PATH="/bin"                    # reset from system-wide level
+export PATH="$PATH:/sbin"             # Essential system binaries
+export PATH="$PATH:/usr/bin"
+export PATH="$PATH:/usr/local/sbin"
+export PATH="$PATH:/usr/local/bin"
+ALMACEN=/home/ALMACEN/SOFTWARE        # paths on the system store
+ANDROID_SDK_DIR="$ALMACEN/ANDROID/android-sdk-linux"
+export PATH="$PATH:$ANDROID_SDK_DIR/tools"
+export PATH="$PATH:$ANDROID_SDK_DIR/platform-tools"
+USRHOME=~                            # (tipically /home/username or /root)
+export PATH="$PATH:$USRHOME/bin"      # custom scripts defined on this dotfiles
+#export PATH="$PATH:$USRHOME/.rvm/bin" # ruby virtual machine
+# OTHER SYSTEM PATHS
+#export PATH="$PATH:/usr/games"        # is this neccessary?
+#export PATH="$PATH:/usr/local/games"  # is this neccessary?
+#export PATH="$PATH:/usr/lib/jvm/java-8-oracle/bin"    # is this neccessary?
+#export PATH="$PATH:/usr/lib/jvm/java-8-oracle/db/bin  # is this neccessary?
+#export PATH="$PATH:/usr/lib/jvm/java-8-oracle/jre/bin # is this neccessary?
+
+##
+# System state control tools
+##
+# Loads Node version manager if present, see https://github.com/creationix/nvm
+NVM_DIR="$USRHOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" export NVM_DIR
+
+
 
 # Taken from http://www.tldp.org/LDP/abs/html/sample-bashrc.html
-# And slighly modified
+# And  modified from there, some content stay hereafter for reference
 #
 # =============================================================== #
 #
@@ -33,23 +95,6 @@
 #  Tailor it to your needs.
 #
 # =============================================================== #
-
-# If not running interactively, don't do anything
-[ -z "$PS1" ] && return
-
-#
-# Source definitions
-#
-# Read /etc/bashrc, if present.
-[ -f /etc/bashrc ] && source /etc/bashrc 
-
-# read rvm definitions, if present
-#[ -s ~/.rvm/scripts/rvm ] && source ~/.rvm/scripts/rvm
-
-# enable programmable completion features
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    source /etc/bash_completion
-fi
 
 #--------------------------------------------------------------
 #  Automatic setting of $DISPLAY (if not set already).
@@ -356,8 +401,8 @@ alias which='type -a'
 alias ..='cd ..'
 
 # Pretty-print of some PATH variables:
-alias path='echo -e ${PATH//:/\\n}'
-alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
+#alias path='echo -e ${PATH//:/\\n}'
+#alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
 
 
 alias du='du -kh'    # Makes a more readable output.
@@ -379,7 +424,6 @@ alias ll="ls -lv --group-directories-first"
 alias lm='ll |more'        #  Pipe through 'more'
 alias lr='ll -R'           #  Recursive ls.
 alias la='ll -A'           #  Show hidden files.
-alias tree='tree -C'    #  Nice alternative to 'recursive ls' ...
 
 
 #-------------------------------------------------------------
@@ -388,7 +432,7 @@ alias tree='tree -C'    #  Nice alternative to 'recursive ls' ...
 
 alias more='less'
 export PAGER=less
-export LESSCHARSET='latin1'
+#export LESSCHARSET='latin1'
 export LESSOPEN='|/usr/bin/lesspipe.sh %s 2>&-'
                 # Use this if lesspipe.sh exists.
 export LESS='-i -N -w  -z-4 -g -e -M -X -F -R -P%t?f%f \
@@ -649,7 +693,6 @@ function corename()   # Get name of app that created a corefile.
         echo -n $file : ; gdb --core=$file --batch | head -1
     done
 }
-
 
 
 #=========================================================================
@@ -921,17 +964,3 @@ _killall()
 
 complete -F _killall killall killps
 
-#export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
-export NVM_DIR="/home/lacon/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
-# Add android sdk directories
-export PATH="$PATH:/home/ALMACEN/SOFTWARE/ANDROID/android-sdk-linux/platform-tools"
-export PATH="$PATH:/home/ALMACEN/SOFTWARE/ANDROID/android-sdk-linux/tools"
-
-# Add path for custom scripts
-export PATH=$PATH:~/bin
-
-# ls colors
-eval `dircolors ~/.dotfiles/term/1-dircolors-solarized/dircolors.ansi-dark`
