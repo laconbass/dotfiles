@@ -7,23 +7,24 @@ set -e
 # Personal output functions
 
 #COLS=$(( $(tput cols) - 4 ))
-info () {
-  printf "\033[00;34m${1}\033[0m\n"
-}
-warn () {
-  printf "\033[0;33m${1}\033[0m\n"
-}
+# TODO: take cols and format according to with
 doing () {
   printf "\033[00;34m> ${1}...\033[0m\n"
 }
+info () {
+  printf "\033[00;34m  ${1}\033[0m\n"
+}
+warn () {
+  printf "\033[0;33m  ${1}\033[0m\n"
+}
 success () {
   [ $# -eq 1 ]\
-    && printf "\033[0;32m${1}\033[0m\n"\
+    && printf "\033[00;34m- \033[0;32m${1}\033[0m\n"\
     || printf "\033[00;34m- \033[0;32mOK\033[0m\n"
 }
 fail () {
   [ $# -eq 1 ]\
-    && printf "\033[0;31m${1}\033[0m\n"\
+    && printf "\033[00;34m- \033[0;31m${1}\033[0m\n"\
     || printf "\033[00;34m- \033[0;31mFAIL\033[0m\n"
   exit 1
 }
@@ -84,8 +85,8 @@ PPASRC=/etc/apt/sources.list.d
 set_ppa () {
   local FILE=$(echo $1 | tr / - | tr . _)
   doing "Ensuring ppa '$1' is set"\
-  && ls -l $PPASRC | grep $FILE\
-  && success "already set"\
+  && ls -l $PPASRC | grep $FILE > /dev/null\
+  && success\
   || (\
     warn "it's not set"\
     && doing "setting up ppa:$1"\
@@ -96,7 +97,7 @@ set_ppa () {
 }
 
 # see http://askubuntu.com/questions/4983/what-are-ppas-and-how-do-i-use-them/4987#4987
-info "setting-up some ppa repositories"
+doing "setting-up some ppa repositories"
 warn "assuming Ubuntu 14.04 environment or later"
 info "assuming ppa are set with add-apt-repository on '$PPASRC'"
 
@@ -106,11 +107,12 @@ set_ppa "nginx/stable"
 set_ppa "chris-lea/node.js"
 
 doing "updating apt sources"\
-  && confirm "press Y to proceed"\
+  && confirm "press Y to proceed, other key to skip (will use apt-get update)"\
   && sudo apt-get update\
   && success "updated apt successfully"\
-  && success "finished setting up ppa repositories"\
-  || fail "couldn't update apt sources"
+  || warn "couldn't update apt sources"
+
+success "finished setting up ppa repositories"
 
 info "***************************************"
 info "**              server              ***"
@@ -163,13 +165,13 @@ then
 else
   success "dotfiles is being updated"\
     && doing "updating repository and git modules"\
-    && confirm "press 'Y' to proceed" || fail "stopped by user"\
+    && confirm "press 'Y' to proceed, other key to skip"\
     && git pull\
     && git submodule init\
     && git submodule foreach --recursive git reset --hard && git clean -f -d\
     && git submodule update\
     && success "succesfully updated source respository"\
-    || fail ":S couldn't update the repository"
+    || warn "couldn't update source code"
 fi
 
 # info "***************************************"
@@ -214,9 +216,9 @@ info "**                                   **"
 ensure_present "vim-nox"
 
 doing "ensuring vim has ruby support (for Command-T plugin)"\
-  && vim --version | grep -o +ruby\
+  && vim --version | grep -o +ruby > /dev/null\
   && success\
-  || fail "no ruby support"
+  || fail "no ruby support, theoretically vim-nox has it enabled by default"
 
 #doing "ensure rvm is loaded as a shell function"\
 #  && source ~/.rvm/scripts/rvm\
@@ -346,7 +348,6 @@ info "***************************************"
 info "***          custom scripts         ***"
 info "**                                   **"
 
-
 USRBIN=~/bin
 mkdir -p $USRBIN
 
@@ -389,7 +390,26 @@ info "***************************************"
 info "***            finish up            ***"
 info "**                                   **"
 
-cd
+ALMACEN="/home/ALMACEN"
+[[ -d $ALMACEN ]]\
+  && doing "Establecento un link ao ALMACEN"\
+  && ( [[ -e ~/ALMACEN ]] && rm ~/ALMACEN || ok )\
+  && ln -s $ALMACEN ~/ALMACEN\
+  && success || fail
+
+set_almacen () {
+  [[ -d $ALMACEN/$1 ]]\
+    && doing "Establecento un link ao ALMACEN de $1 en ~/$2"\
+    && ( [[ -e ~/$2 ]] && rm ~/$2 || ok )\
+    && ln -s $ALMACEN/$1 ~/$2\
+    && success || fail
+}
+
+set_almacen "SOFTWARE" "ALMACEN_SOFTWARE"
+set_almacen "IMAGES" "ALMACEN_FOTOS"
+set_almacen "MUSICA" "Música"
+set_almacen "DOCS" "ALMACEN_DOCS"
+
 
 info "The installation process completed"
 info "You may want to close this shell and open a new one"
